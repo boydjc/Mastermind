@@ -40,9 +40,3 @@ class Computer
 	return code
   end
 end
-
-
-
-comp = Computer.new()
-
-p comp.createCode()
