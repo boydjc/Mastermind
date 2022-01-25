@@ -1,5 +1,7 @@
 class Player
-  def initialize(); end
+  def initialize()
+    @feedback = nil
+  end
 
   # creates a code for the player to guess
   # choices to pick are 
@@ -8,18 +10,26 @@ class Player
   # 2 - purple     7 - white
   # 3 - black      8 - blank
   # 4 - orange     9 - pink
-  def createCode()
+  def createOrGuessCode(role)
     code = []
 	while code.length < 4
 
 	  if code.length > 0
-	    print "Your current code is: "
+	    if role == "create"
+	      print "Your current code is: "
+		elsif role == "guess"
+		  print "Your current guess is: "
+		end
 		p code
 		puts "You have #{4 - code.length} choices remaining."
 	  end
 	  
       puts "\nChoose your color for slot #{code.length+1}."
-	  puts "The choices for your code are the following:"
+	  if role == "create"
+	  	puts "The choices for your code are the following:"
+	  elsif role == "guess"
+	    puts "The choices for your guess are the following:"
+	  end
 	  puts "0 - red \t 5 - blue"
 	  puts "1 - green \t 6 - yellow"
 	  puts "2 - purple \t 7 - white"
