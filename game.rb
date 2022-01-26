@@ -4,6 +4,7 @@ require './computer.rb'
 class Game
   def initialize()
     @secretCode = []
+	@codeColorOccurances = Hash.new(0)
 	@winner = false
 	@codeBreaker = nil
 	@codeMaker = nil
@@ -26,7 +27,7 @@ class Game
 		end
 		playerGuess = @player.createOrGuessCode("guess")
 		evalGuessResult = evalGuess(playerGuess)
-		clearScreen()
+		#clearScreen()
 		givePlayerFeedback(evalGuessResult)
 	  elsif @codeBreaker == "computer"
 	    # have computer guess code
@@ -63,24 +64,61 @@ class Game
 	else
 	  puts "ERROR GENERATING SECRET CODE IN setupGame()"
 	end
+
+	setColorOccurances()
   end
 
   # evaluates a code guess and returns feedback
   # 0 - indicates that there is a a wrong color that is not in the code
-  # 1 - indicates that there is a right color in the correct position
-  # 2 - indicates that there is a right color but in the wrong position
+  # 1 - indicates that there is a right color but in the wrong position
+  # 2 - indicates that there is a right color in the correct position
+
   def evalGuess(guess)
-     result = []
-	 guess.each_with_index do |color, cIndex|
-	   if @secretCode[cIndex] == color
-	     result.push(1)
-	   elsif (@secretCode[cIndex] != color && @secretCode.any?(color))
-	     result.push(2)
-	   else
-	     result.push(0)
-	   end
-	 end
-	 return result
+    result = []
+
+	# we need to check the occurance of the colors in the code
+    # in relation with the colors in the guess
+    # for example if we have two "reds" we need to make sure that
+    # the check does not count the first "red" if it has already been 
+    # accounted for in previous iterations
+	guess.each_with_index do |color, cIndex|
+	  if @secretCode[cIndex] == color
+	    result.push(2)
+	  elsif (@secretCode[cIndex] != color)
+	    # check to see if the color is somewhere in the code
+	    if @secretCode.any?(color)
+		  colorGuessOccurance = 0
+		  # count how many times is this time we are seeing this color
+		  for i in 0..cIndex
+		    if guess[i] == color
+			  colorGuessOccurance += 1
+			end
+		  end
+		  # if the times we have seen this color is less 
+		  # than or equal to the max number of occurances
+		  # of the color in the secret code then we can proceed
+		  # with the feedback message
+		  if colorGuessOccurance <= @codeColorOccurances[color]
+            result.push(1)
+		  else
+		    result.push(0)
+		  end
+		else
+		  result.push(0)
+		end
+	  end
+	end
+    return result
+  end
+
+  # counts the number of occurances for each color 
+  # in the secret code. This is used later when evaluating 
+  # guesses
+  def setColorOccurances()
+    @codeColorOccurances = Hash.new(0)	
+	@secretCode.each do |color|
+	  @codeColorOccurances[color] += 1
+	end
   end
 
   def givePlayerFeedback(guessResult)
