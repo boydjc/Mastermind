@@ -8,7 +8,7 @@ class Computer
   # 2 - purple     7 - white
   # 3 - black      8 - blank
   # 4 - orange     9 - pink
-  def createCode()
+  def createOrGuessCode()
     code = []
 	for i in 0..3
 	  choice = rand(0..9)
