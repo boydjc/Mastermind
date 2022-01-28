@@ -79,7 +79,7 @@ class Game
 	if @codeMaker == "player"
 	  @secretCode = @player.createOrGuessCode("create")
 	elsif @codeMaker == "computer"
-	  @secretCode = @computer.createCode()
+	  @secretCode = @computer.createOrGuessCode()
 	else
 	  puts "ERROR GENERATING SECRET CODE IN setupGame()"
 	end
