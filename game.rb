@@ -21,13 +21,15 @@ class Game
 
 	while not @winner and @guessNums < 12
 
-      if @guessNums >= 12:
+      if @guessNums == 11
 	    if @codeBreaker == "player"
 		  puts "Sorry. You failed to break the computer's code."
 		  break
 		elsif @codeBreaker == "computer"
 		  puts "Congrats. The computer was not able to crack your code!"
 		  break
+		end
+	  end
 
 	  if @codeBreaker == "player"
 	    puts "--------------------------------"
@@ -44,8 +46,11 @@ class Game
 		givePlayerFeedback(evalGuessResult)
 	  elsif @codeBreaker == "computer"
 	    # have computer guess code
-		# have player give feedback in the form of 
-		# preformatted messages
+		computerGuess = @computer.createOrGuessCode()
+		puts "Computer guesses "
+		p computerGuess
+		@guessNums += 1
+		evalGuessResult = evalGuess(computerGuess)
 	  end
 	end
   end
