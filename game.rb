@@ -10,6 +10,7 @@ class Game
 	@codeMaker = nil
 	@computer = Computer.new()
 	@player = Player.new()
+	@guessNums = 0
   end
 
   public
@@ -18,16 +19,28 @@ class Game
 
 	playerGuess = nil
 
-	while not @winner
+	while not @winner and @guessNums < 12
+
+      if @guessNums >= 12:
+	    if @codeBreaker == "player"
+		  puts "Sorry. You failed to break the computer's code."
+		  break
+		elsif @codeBreaker == "computer"
+		  puts "Congrats. The computer was not able to crack your code!"
+		  break
+
 	  if @codeBreaker == "player"
+	    puts "--------------------------------"
 	    # have player guess code
 		if playerGuess != nil
 		  print "Your last guess was "
 		  p playerGuess
 		end
+		puts "You have #{12 - @guessNums} guesses remaining."
 		playerGuess = @player.createOrGuessCode("guess")
+		@guessNums += 1
 		evalGuessResult = evalGuess(playerGuess)
-		#clearScreen()
+		clearScreen()
 		givePlayerFeedback(evalGuessResult)
 	  elsif @codeBreaker == "computer"
 	    # have computer guess code
@@ -39,6 +52,7 @@ class Game
 
   private
   def setupGame()
+    guessNums = 0
     # pick roles
     while @codeBreaker == nil && @codeMaker == nil
       puts "\nPlayer. Are you the codebreaker or codemaker?"
